@@ -31,9 +31,9 @@
 3. 在 Tampermonkey 弹出的安装页面确认安装并启用脚本。
 4. 打开或刷新 [X 首页](https://x.com/home)。符合条件的推文会在 Grok 按钮左侧出现「译」；没有出现时参见[常见问题](#常见问题与反馈)。
 
-脚本通过 Greasy Fork 安装与更新；GitHub 仓库用于查看源码、反馈和开发。
+脚本可通过 Greasy Fork 安装；当前源码的更新与下载地址指向 GitHub `main` 分支的原始脚本，项目主页指向 GitHub 仓库。
 
-**更新脚本**：通过 Tampermonkey 检查并获取 Greasy Fork 上的更新，或回到同一发布页安装更新。自动检查与安装取决于 Tampermonkey 设置及有效的脚本更新信息，不保证发布后立即自动更新。
+**更新脚本**：使用当前源码安装时，Tampermonkey 根据脚本中的 `@updateURL` 和 `@downloadURL` 从 GitHub 检查并下载更新；发布新版本时需递增 `@version`。通过 Greasy Fork 安装的版本以其实际元数据为准，也可回到同一发布页安装更新。自动检查与安装取决于 Tampermonkey 设置及有效的脚本更新信息，不保证发布后立即自动更新。
 
 本文描述**当前仓库源码**；Greasy Fork 上的已发布版本可能滞后，实际可用功能以安装版本为准。
 

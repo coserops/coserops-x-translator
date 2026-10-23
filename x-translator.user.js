@@ -33,6 +33,9 @@
 // @description:ru Добавляет кнопку перевода слева от Grok в домашней ленте X. Используйте свой API-ключ и выбранную модель через официальный или пользовательский совместимый API; перевод появится на правой панели.
 // @description:es Añade un botón de traducción a la izquierda de Grok en la cronología de inicio de X. Usa tu propia clave API y el modelo que elijas con una API oficial o compatible personalizada, y consulta la traducción en el panel derecho.
 // @description:it Aggiunge un pulsante di traduzione a sinistra di Grok nella cronologia iniziale di X. Usa la tua chiave API e il modello scelto con API ufficiali o compatibili personalizzate e leggi la traduzione nel pannello a destra.
+// @updateURL    https://raw.githubusercontent.com/coserops/coserops-x-translator/main/x-translator.user.js
+// @downloadURL  https://raw.githubusercontent.com/coserops/coserops-x-translator/main/x-translator.user.js
+// @homepageURL  https://github.com/coserops/coserops-x-translator
 // @match        https://x.com/*
 // @match        https://twitter.com/*
 // @grant        GM_getValue
