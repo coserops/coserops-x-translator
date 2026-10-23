@@ -1164,3 +1164,15 @@ test('author contact links appear in both surfaces without submitting or request
   contact.dispatchEvent(new app.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   assert.equal(app.d.querySelector('.xt-overlay').hidden, true);
 });
+
+
+test('contact orbit is continuous with static accessible fallbacks', t => {
+  const app = setup(t);
+  const css = [...app.d.querySelectorAll('style')].map(node => node.textContent).join('\n');
+  assert.match(css, /\.xt-contact a::after\s*\{[^}]*pointer-events:none/);
+  assert.match(css, /@supports\(offset-path:inset\(0 round 12px\)\)\s*\{\s*\.xt-contact a::after\s*\{[^}]*animation:xt-contact-orbit 5s linear infinite/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)\s*\{[^}]*\.xt-contact a::after\s*\{\s*animation:none!important/);
+  assert.match(css, /@media\(forced-colors:active\)\s*\{[^}]*\}\s*\.xt-contact a::after\s*\{ display:none \}/);
+  assert.equal(app.w.getComputedStyle(app.d.querySelector('.xt-contact')).fontSize, '14px');
+  assert.equal(app.w.getComputedStyle(app.d.querySelector('.xt-contact a')).fontSize, '15px');
+});

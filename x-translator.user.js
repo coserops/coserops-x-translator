@@ -16,7 +16,7 @@
 // @name:es       CoserOps X(Twitter) Traductor
 // @name:it       CoserOps X(Twitter) Traduttore
 // @namespace    coserops/x-twitter-translator
-// @version      v20261023.2200
+// @version      v20261023.2249
 // @description  在 X 首页时间流的 Grok 按钮左侧添加翻译按钮，使用自己的 API Key 和自选模型，支持官方或自定义兼容接口，在右侧面板显示译文。
 // @description:zh-TW 在 X 首頁時間軸的 Grok 按鈕左側新增翻譯按鈕，使用自己的 API Key 與自選模型，支援官方或自訂相容介面，於右側面板顯示譯文。
 // @description:en Translate X home timeline posts using a button next to Grok. Use your own API key and model with official or custom compatible endpoints, and view translations in a right-side panel.
@@ -59,7 +59,7 @@
   const REQUEST_TIMEOUT_MS = 30000;
   const SCAN_DELAY_MS = 40;
   const ROUTE_POLL_INTERVAL_MS = 500;
-  const SCRIPT_VERSION = 'v20261023.2200';
+  const SCRIPT_VERSION = 'v20261023.2249';
   const providers = {
     deepseek: {
       label: 'DeepSeek',
@@ -1201,18 +1201,47 @@
       padding-top:12px;
       border-top:1px solid var(--xt-line);
       color:var(--xt-muted);
-      font-size:12px
+      font-size:14px
     }
     .xt-contact a {
       display:inline-flex;
       align-items:center;
+      position:relative;
       min-height:44px;
+      padding:8px 14px;
+      border:1px solid var(--xt-action-line);
+      background:var(--xt-tint);
       color:var(--xt-accent);
-      font-weight:600;
+      font-size:15px;
+      font-weight:700;
       text-decoration:underline;
       text-decoration-thickness:1px;
       text-underline-offset:4px;
-      border-radius:6px
+      border-radius:12px
+    }
+    .xt-contact a::after {
+      content:"";
+      position:absolute;
+      top:0;
+      right:12px;
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:var(--xt-lime);
+      box-shadow:0 0 0 1px var(--xt-action-line),0 0 8px var(--xt-lime);
+      pointer-events:none
+    }
+    @supports(offset-path:inset(0 round 12px)) {
+      .xt-contact a::after {
+        top:0;
+        left:0;
+        right:auto;
+        offset-path:inset(0 round 12px);
+        animation:xt-contact-orbit 5s linear infinite
+      }
+    }
+    @keyframes xt-contact-orbit {
+      to { offset-distance:100% }
     }
     .xt-contact a:hover { text-decoration-thickness:2px }
     .xt-actions {
@@ -1357,7 +1386,7 @@
       }
     }
     @media(prefers-reduced-motion:reduce){
-      .xt-panel,.xt-settings,.xt-status::before{
+      .xt-panel,.xt-settings,.xt-status::before,.xt-contact a::after{
         animation:none!important
       }
       .xt-panel *,.xt-overlay *,.xt-launcher,.xt-translate{
@@ -1366,6 +1395,8 @@
       }
     }
     @media(forced-colors:active){
+      .xt-contact a { border-color:LinkText }
+      .xt-contact a::after { display:none }
       .xt-card-result,.xt-status{
         border:1px solid CanvasText
       }
