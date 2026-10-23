@@ -26,11 +26,15 @@
 普通用户只需要浏览器、Tampermonkey，以及所选 API 服务的账号和 Key；无需 Node.js 或自建后端。
 
 1. 安装并启用最新版 [Tampermonkey（篡改猴）](https://www.tampermonkey.net/)，按浏览器提示开启用户脚本权限。
-2. 在[项目仓库](https://github.com/coserops/coserops-x-translator)打开 [`x-translator.user.js`](./x-translator.user.js)，通过文件页的 Raw 查看或下载完整源码。**文件浏览页不是一键安装链接**。
-3. 在 Tampermonkey 管理面板新建脚本，用下载或复制的**全部源码**替换编辑器里的初始内容，保存并启用。
+2. 打开 [**CoserOps X(推特) 翻译的 Greasy Fork 发布页**](https://greasyfork.org/zh-CN/scripts/601758-coserops-x-%E6%8E%A8%E7%89%B9-%E7%BF%BB%E8%AF%91)，点击 **「安装此脚本」**。
+3. 在 Tampermonkey 弹出的安装页面确认安装并启用脚本。
 4. 打开或刷新 [X 首页](https://x.com/home)。符合条件的推文会在 Grok 按钮左侧出现「译」；没有出现时参见[常见问题](#常见问题与反馈)。
 
-本文描述**当前仓库源码**。仓库资料尚未提供可确认的专属 Greasy Fork 安装页或发布包地址，因此这里采用源码安装，不假定平台版本已包含全部功能。
+脚本通过 Greasy Fork 安装与更新；GitHub 仓库用于查看源码、反馈和开发。
+
+**更新脚本**：通过 Tampermonkey 检查并获取 Greasy Fork 上的更新，或回到同一发布页安装更新。自动检查与安装取决于 Tampermonkey 设置及有效的脚本更新信息，不保证发布后立即自动更新。
+
+本文描述**当前仓库源码**；Greasy Fork 上的已发布版本可能滞后，实际可用功能以安装版本为准。
 
 ## 快速开始
 

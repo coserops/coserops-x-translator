@@ -16,7 +16,7 @@
 
 ## 三步开始
 
-1. 安装 **Tampermonkey（篡改猴）**，将下方脚本文件的完整内容复制到新建脚本中，保存。
+1. 安装并启用 **Tampermonkey（篡改猴）**，点击本 Greasy Fork 页面上的 **「安装此脚本」**，在篡改猴中确认安装。
 2. 打开 X，在篡改猴菜单选择 **「X 翻译：设置 API Key / 模型」**；先确认服务商、地址和模型，再填写自己的 Key 并保存。
 3. 点击推文或评论旁的 **「译」**，查看结果。
 
@@ -28,9 +28,10 @@
 
 请求时，原文和 Key 直接发送给所选服务商或中转站，请确认其可信。Key 及缓存原文、译文非加密保存在篡改猴本地存储；缓存可关闭、清空。
 
-## 下载与源码
+## 安装、更新与源码
 
-- **脚本文件**：[x-translator.user.js](https://github.com/coserops/coserops-x-translator/blob/main/x-translator.user.js)
+- **安装脚本**：打开 [Greasy Fork 发布页](https://greasyfork.org/zh-CN/scripts/601758-coserops-x-%E6%8E%A8%E7%89%B9-%E7%BF%BB%E8%AF%91)，点击 **「安装此脚本」**，由篡改猴完成安装。
+- **更新脚本**：通过篡改猴检查并获取 Greasy Fork 上的更新，也可回到本页安装更新。自动更新取决于篡改猴设置及有效的脚本更新信息。
 - **配置指南与项目源码**：[CoserOps X(推特) 翻译](https://github.com/coserops/coserops-x-translator)
 
 ## 更多项目
