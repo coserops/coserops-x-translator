@@ -2,7 +2,7 @@
 
 # CoserOps X(推特) 翻译
 
-[更多 CoserOps 项目](https://github.com/orgs/coserops/repositories)
+[更多 CoserOps 项目](https://github.com/orgs/coserops/repositories) · [联系作者：X @coserops](https://x.com/coserops)
 
 在 X / Twitter 的推文 **Grok 按钮左侧**添加「译」按钮，点击后在右侧面板阅读原文和译文。使用自己的 API Key，直连所选供应商或可信的 OpenAI 兼容服务；目标语言自动跟随浏览器首选语言。
 
@@ -207,6 +207,8 @@ Qwen 的「服务地址」还提供 **官方新加坡（国际）**：`https://d
 
 ### 如何反馈
 
+联系作者：[X @coserops](https://x.com/coserops)。翻译面板底部和设置窗口底部也提供联系入口，点击会在新标签页打开作者主页。联系入口采用加大字号与持续环绕圆角边框的青柠光点；系统开启“减少动态效果”时停止动画，不支持运动路径的浏览器显示静态光点。
+
 脚本相关问题可从[项目仓库](https://github.com/coserops/coserops-x-translator)查看可用的反馈入口；若仓库已启用 Issues，可在那里提交。请提供浏览器与 Tampermonkey 版本、脚本管理器版本号及面板显示版本、页面类型、复现步骤、预期/实际结果，以及自行检查过的脱敏错误信息。不要提交 Key、访问令牌、完整私密配置或敏感推文。
 
 接口权限、额度与模型可用性问题请先联系所选服务方，提供脱敏后的 Endpoint、模型、HTTP 状态及 Request ID。完整地址也可能含私有工作空间信息，分享前请删去。脚本没有在线验证过所有预设模型，模型无效时请填写账号实际可用的 ID。
@@ -223,7 +225,7 @@ npm test         # node --test：模拟 DOM / GM API 回归测试
 
 依赖已安装时不必重复 `npm ci`。测试位于 [`tests/userscript.test.cjs`](./tests/userscript.test.cjs)，覆盖页面注入、配置、语言判断、请求、缓存及诊断等行为；模拟测试不能替代真实登录 X 页面、扩展网络/重定向实现或付费 API 验证。
 
-发布前应核对脚本元数据 `@version` 与面板使用的 `SCRIPT_VERSION`，当前源码两者不一致；README 不负责修正发布版本。凭据和配置使用 `x-direct.v1.*` 存储键，缓存独立使用 `x-direct.v1.translation-cache`；修改存储结构时注意兼容已有数据。
+发布前应核对脚本元数据 `@version` 与面板使用的 `SCRIPT_VERSION`，确保两者一致。凭据和配置使用 `x-direct.v1.*` 存储键，缓存独立使用 `x-direct.v1.translation-cache`；修改存储结构时注意兼容已有数据。
 
 ## 许可证
 

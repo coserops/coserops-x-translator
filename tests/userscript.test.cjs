@@ -1138,3 +1138,41 @@ test('branding embeds the exact repository logo and preserves accessible control
   assert.equal(app.d.querySelectorAll('.xt-card-heading h3').length, 2);
   assert.equal(app.requests.length, 0);
 });
+
+
+test('author contact links appear in both surfaces without submitting or requesting translations', t => {
+  const app = setup(t);
+  const contacts = [...app.d.querySelectorAll('.xt-contact a')];
+  assert.equal(contacts.length, 2);
+  assert.ok(app.d.querySelector('.xt-content > .xt-contact a'));
+  assert.ok(app.d.querySelector('.xt-form-body > .xt-contact a'));
+  for (const link of contacts) {
+    assert.equal(link.textContent, 'X @coserops');
+    assert.equal(link.href, 'https://x.com/coserops');
+    assert.equal(link.target, '_blank');
+    assert.equal(link.rel, 'noopener noreferrer');
+    assert.match(link.getAttribute('aria-label'), /新标签页/);
+  }
+  app.menu();
+  const contact = contacts[1];
+  contact.focus();
+  assert.equal(app.d.activeElement, contact);
+  contact.addEventListener('click', event => event.preventDefault());
+  contact.click();
+  assert.equal(app.d.querySelector('.xt-overlay').hidden, false);
+  assert.equal(app.requests.length, 0);
+  contact.dispatchEvent(new app.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  assert.equal(app.d.querySelector('.xt-overlay').hidden, true);
+});
+
+
+test('contact orbit is continuous with static accessible fallbacks', t => {
+  const app = setup(t);
+  const css = [...app.d.querySelectorAll('style')].map(node => node.textContent).join('\n');
+  assert.match(css, /\.xt-contact a::after\s*\{[^}]*pointer-events:none/);
+  assert.match(css, /@supports\(offset-path:inset\(0 round 12px\)\)\s*\{\s*\.xt-contact a::after\s*\{[^}]*animation:xt-contact-orbit 5s linear infinite/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)\s*\{[^}]*\.xt-contact a::after\s*\{\s*animation:none!important/);
+  assert.match(css, /@media\(forced-colors:active\)\s*\{[^}]*\}\s*\.xt-contact a::after\s*\{ display:none \}/);
+  assert.equal(app.w.getComputedStyle(app.d.querySelector('.xt-contact')).fontSize, '14px');
+  assert.equal(app.w.getComputedStyle(app.d.querySelector('.xt-contact a')).fontSize, '15px');
+});
