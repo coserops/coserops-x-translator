@@ -1147,7 +1147,9 @@ test('author contact links appear in both surfaces without submitting or request
   assert.ok(app.d.querySelector('.xt-content > .xt-contact a'));
   assert.ok(app.d.querySelector('.xt-form-body > .xt-contact a'));
   for (const link of contacts) {
-    assert.equal(link.textContent, 'X @coserops');
+    assert.equal(link.textContent, '联系作者 X @coserops');
+    assert.equal(link.querySelector('.xt-contact-label').textContent, '联系作者');
+    assert.equal(link.parentElement.children.length, 1);
     assert.equal(link.href, 'https://x.com/coserops');
     assert.equal(link.target, '_blank');
     assert.equal(link.rel, 'noopener noreferrer');
@@ -1169,14 +1171,16 @@ test('author contact links appear in both surfaces without submitting or request
 test('contact orbit is continuous with static accessible fallbacks', t => {
   const app = setup(t);
   const css = [...app.d.querySelectorAll('style')].map(node => node.textContent).join('\n');
-  assert.match(css, /\.xt-contact-label::after,\.xt-contact a::after\s*\{[^}]*pointer-events:none/);
-  assert.match(css, /@supports\(offset-path:inset\(0 round 12px\)\)\s*\{\s*\.xt-contact-label::after,\.xt-contact a::after\s*\{[^}]*animation:xt-contact-orbit 5s linear infinite/);
-  assert.match(css, /@media\(prefers-reduced-motion:reduce\)\s*\{[^}]*\.xt-contact-label::after,\.xt-contact a::after\s*\{\s*animation:none!important/);
-  assert.match(css, /@media\(forced-colors:active\)\s*\{[^}]*\}[^}]*\}\s*\.xt-contact-label::after,\.xt-contact a::after\s*\{ display:none \}/);
+  assert.match(css, /\.xt-contact a::after\s*\{[^}]*pointer-events:none/);
+  assert.match(css, /@supports\(offset-path:inset\(0 round 12px\)\)\s*\{\s*\.xt-contact a::after\s*\{[^}]*animation:xt-contact-orbit 5s linear infinite/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)\s*\{[^}]*\.xt-contact a::after\s*\{\s*animation:none!important/);
+  assert.match(css, /@media\(forced-colors:active\)\s*\{[^}]*\}\s*\.xt-contact a::after\s*\{ display:none \}/);
+  assert.doesNotMatch(css, /\.xt-contact-label::after/);
   assert.equal(app.d.querySelectorAll('.xt-contact-label').length, 2);
   for (const label of app.d.querySelectorAll('.xt-contact-label')) {
     assert.equal(label.textContent, '联系作者');
-    assert.equal(app.w.getComputedStyle(label).position, 'relative');
+    assert.equal(label.parentElement.tagName, 'A');
+    assert.notEqual(app.w.getComputedStyle(label).position, 'relative');
     assert.equal(app.w.getComputedStyle(label).fontSize, '14px');
   }
   assert.equal(app.w.getComputedStyle(app.d.querySelector('.xt-contact')).fontSize, '14px');
