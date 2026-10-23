@@ -2,6 +2,8 @@
 
 # CoserOps X(推特) 翻译
 
+[更多 CoserOps 项目](https://github.com/orgs/coserops/repositories)
+
 **看外语推文，读评论讨论，不用来回复制、切换页面。**
 
 在 Grok 按钮左侧点一下「译」，就在右侧对照原文与译文。使用自己的 API Key 和模型，让翻译跟上阅读，而不是打断阅读。
@@ -33,7 +35,3 @@
 - **安装脚本**：打开 [Greasy Fork 发布页](https://greasyfork.org/zh-CN/scripts/601758-coserops-x-%E6%8E%A8%E7%89%B9-%E7%BF%BB%E8%AF%91)，点击 **「安装此脚本」**，由篡改猴完成安装。
 - **更新脚本**：通过篡改猴检查并获取 Greasy Fork 上的更新，也可回到本页安装更新。自动更新取决于篡改猴设置及有效的脚本更新信息。
 - **配置指南与项目源码**：[CoserOps X(推特) 翻译](https://github.com/coserops/coserops-x-translator)
-
-## 更多项目
-
-[发现更多 CoserOps 实用脚本](https://github.com/orgs/coserops/repositories)

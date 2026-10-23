@@ -2,6 +2,8 @@
 
 # CoserOps X(推特) 翻译
 
+[更多 CoserOps 项目](https://github.com/orgs/coserops/repositories)
+
 在 X / Twitter 的推文 **Grok 按钮左侧**添加「译」按钮，点击后在右侧面板阅读原文和译文。使用自己的 API Key，直连所选供应商或可信的 OpenAI 兼容服务；目标语言自动跟随浏览器首选语言。
 
 这是独立的 [Tampermonkey 用户脚本](./x-translator.user.js)，没有项目后端，使用时不需要 Node.js、构建或启动服务。支持按需翻译、本地同语言跳过、持久翻译缓存及调用诊断，不会自动批量翻译时间流。
@@ -19,7 +21,6 @@
 - [开发与维护](#开发与维护)
 - [许可证](#许可证)
 - [附录：模型推荐与报价参考](#附录模型推荐与报价参考)
-- [更多项目](#更多项目)
 
 ## 获取与安装
 
@@ -243,7 +244,3 @@ npm test         # node --test：模拟 DOM / GM API 回归测试
 | OpenAI / 美元 | `gpt-6-luna` | **首选** | 未提供 | $0.10 | $0.50 |
 | xAI Grok | `grok-4-1-fast-non-reasoning` | 保留原默认推荐 | 未提供 | 未提供 | 未提供 |
 | xAI Grok | `grok-4-1-fast-reasoning` | 保留原备选 | 未提供 | 未提供 | 未提供 |
-
-## 更多项目
-
-[CoserOps 项目集合](https://github.com/orgs/coserops/repositories)
