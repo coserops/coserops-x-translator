@@ -1,3 +1,5 @@
+![CoserOps X(推特) 翻译 Logo](./logo.png)
+
 # CoserOps X(推特) 翻译
 
 在 X / Twitter 的推文 **Grok 按钮左侧**添加「译」按钮，点击后在右侧面板阅读原文和译文。使用自己的 API Key，直连所选供应商或可信的 OpenAI 兼容服务；目标语言自动跟随浏览器首选语言。

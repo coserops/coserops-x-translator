@@ -1,3 +1,5 @@
+![CoserOps X(推特) 翻译 Logo](https://raw.githubusercontent.com/coserops/coserops-x-translator/fa5d9749ac3372bca3c6e954343e5af16367570c/logo.png)
+
 # CoserOps X(推特) 翻译
 
 **看外语推文，读评论讨论，不用来回复制、切换页面。**
