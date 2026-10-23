@@ -874,7 +874,7 @@
       cursor:not-allowed;
       transform:none
     }
-    .xt-panel :focus-visible,.xt-overlay :focus-visible,.xt-translate:focus-visible {
+    .xt-panel :focus-visible,.xt-overlay :focus-visible,.xt-translate:focus-visible,.xt-launcher:focus-visible {
       outline:3px solid var(--xt-accent,#086da9);
       outline-offset:3px
     }
@@ -1116,6 +1116,25 @@
     .xt-translate:active {
       background:#1d9bf040
     }
+    .xt-launcher {
+      position:fixed;
+      right:max(24px,env(safe-area-inset-right));
+      bottom:max(96px,env(safe-area-inset-bottom));
+      z-index:2147483645;
+      min-width:64px;
+      height:48px;
+      padding:0 16px;
+      border:1px solid #ffffff66;
+      border-radius:999px;
+      background:#086da9;
+      color:#fff;
+      box-shadow:0 4px 16px #0003;
+      cursor:pointer;
+      font:650 15px system-ui
+    }
+    .xt-launcher:hover {
+      background:#075b8d
+    }
     .xt-panel [hidden],.xt-overlay [hidden],.xt-panel[hidden],.xt-overlay[hidden] {
       display:none!important
     }
@@ -1195,7 +1214,9 @@
   `;
   document.head.append(style);
   const panel = createElement('aside', undefined, 'xt-panel');
+  panel.id = 'xt-translation-panel';
   panel.hidden = true;
+  let panelOpenedFromLauncher = false;
   panel.setAttribute('aria-label', '推文翻译');
   const status = createElement('p', '', 'xt-status');
   status.setAttribute('aria-atomic', 'true');
@@ -1209,6 +1230,16 @@
     panel.hidden = true;
     restoreFocus(translationOpener);
   }, 'xt-close');
+  const launcher = createButton('译', () => {
+    translationOpener = launcher;
+    panelOpenedFromLauncher = true;
+    panel.hidden = false;
+    if (!status.textContent) setStatus('点击推文旁的「译」开始翻译，或打开「设置」配置服务。');
+    if (overlay.hidden) closeButton.focus({ preventScroll: true });
+  }, 'xt-launcher');
+  launcher.setAttribute('aria-label', '打开翻译面板');
+  launcher.setAttribute('aria-controls', panel.id);
+  launcher.title = '打开翻译面板';
   const retryButton = createButton('重试', () => translate(lastSourceText, lastSourceLanguage));
   const forceButton = createButton('强制翻译', () => {
     if (!forceButton.hidden && !panel.hidden) {
@@ -1463,7 +1494,7 @@
   actions.append(saveButton, cancelButton);
   form.append(actions);
   overlay.append(form);
-  document.body.append(panel, overlay);
+  document.body.append(panel, overlay, launcher);
 
   function appendOption(select, value, text) {
     const node = createElement('option', text);
@@ -2124,6 +2155,22 @@
       return /\bgrok\b|grok[-_]?button/i.test(semantic);
     });
   }
+  function positionLauncher() {
+    let anchor;
+    for (const node of document.querySelectorAll('button,[role="button"],a[href="/i/grok"],a[href="/i/grok/"]')) {
+      if (node.closest('article,nav,[role="navigation"],.xt-panel,.xt-overlay')) continue;
+      const semantic = ['aria-label', 'title', 'data-testid', 'href'].map(attr => node.getAttribute(attr) || '').join(' ');
+      if (!/\bgrok\b|grok[-_]?button|grokdrawer/i.test(semantic)) continue;
+      const rect = node.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0 || rect.width > 160 || rect.height > 160 ||
+          rect.top < window.innerHeight / 2 || rect.bottom > window.innerHeight ||
+          rect.right > window.innerWidth || rect.right < window.innerWidth - 96 ||
+          getComputedStyle(node).visibility === 'hidden') continue;
+      if (!anchor || rect.bottom > anchor.bottom) anchor = rect;
+    }
+    launcher.style.right = anchor ? `${Math.max(12, window.innerWidth - anchor.right)}px` : '';
+    launcher.style.bottom = anchor ? `${window.innerHeight - anchor.top + 12}px` : '';
+  }
   let scanScheduled = false;
 
   /** Reconcile controls with current routes and recycled X article nodes.
@@ -2131,10 +2178,11 @@
    */
   function scanArticles() {
     scanScheduled = false;
+    positionLauncher();
     const supported = isTranslationPage();
     removeObsoleteControls(supported);
     if (!supported) {
-      if (!panel.hidden) {
+      if (!panel.hidden && !panelOpenedFromLauncher) {
         invalidate();
         panel.hidden = true;
       }
@@ -2171,6 +2219,7 @@
         return;
       }
       translationOpener = control;
+      panelOpenedFromLauncher = false;
       const post = readPost(article);
       translate(post.text, post.language);
     }, 'xt-translate');
@@ -2193,6 +2242,8 @@
     attributeFilter: ['aria-label', 'title', 'data-testid', 'aria-selected'],
   });
   window.addEventListener('popstate', scheduleScan);
+  window.addEventListener('resize', scheduleScan);
+  window.addEventListener('scroll', scheduleScan, { passive: true });
   // Sandboxed userscripts cannot reliably intercept X's page-world history methods.
   let lastRoute = location.href;
   setInterval(() => {

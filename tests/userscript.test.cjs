@@ -1005,3 +1005,86 @@ test('profile feeds inject beside own Grok across tabs and SPA navigation', asyn
   await tick();
   assert.ok(control(article));
 });
+
+
+test('floating launcher opens the panel on any route without requests and restores focus', async t => {
+  const app = setup(t, { path: '/search' });
+  const launcher = app.d.querySelector('.xt-launcher');
+  const panel = app.d.querySelector('.xt-panel');
+  assert.equal(launcher.getAttribute('aria-controls'), panel.id);
+  assert.equal(panel.hidden, true);
+  launcher.click();
+  await tick();
+  assert.equal(panel.hidden, false);
+  assert.match(status(app), /点击推文旁/);
+  assert.equal(app.d.activeElement, app.d.querySelector('.xt-close'));
+  assert.equal(app.requests.length, 0);
+  app.w.document.dispatchEvent(new app.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  assert.equal(panel.hidden, true);
+  assert.equal(app.d.activeElement, launcher);
+  launcher.click();
+  await tick();
+  assert.equal(panel.hidden, false);
+  assert.equal(app.d.querySelectorAll('.xt-launcher').length, 1);
+});
+
+test('floating launcher reopens existing results without retranslating or clearing them', async t => {
+  const app = setup(t);
+  const article = await app.post();
+  control(article).click();
+  app.respond(0, '已有译文');
+  app.d.querySelector('.xt-close').click();
+  app.d.querySelector('.xt-launcher').click();
+  await tick();
+  assert.equal(app.d.querySelector('.xt-panel').hidden, false);
+  assert.equal(result(app), '已有译文');
+  assert.equal(app.requests.length, 1);
+  assert.equal(app.d.querySelector('.xt-source').textContent, 'Hello\nworld 😀');
+});
+
+test('floating launcher tracks the bottom-right Grok button, resize and removal', async t => {
+  const app = setup(t);
+  const launcher = app.d.querySelector('.xt-launcher');
+  const article = await app.post();
+  const rect = () => ({ width: 56, height: 56, top: app.w.innerHeight - 80, bottom: app.w.innerHeight - 24, right: app.w.innerWidth - 24 });
+  article.querySelector('[aria-label="Ask Grok"]').getBoundingClientRect = rect;
+  app.w.dispatchEvent(new app.w.Event('resize'));
+  await tick();
+  assert.equal(launcher.style.bottom, '');
+  const grok = app.d.createElement('button');
+  grok.dataset.testid = 'GrokDrawer';
+  grok.getBoundingClientRect = rect;
+  app.d.body.append(grok);
+  await tick();
+  assert.equal(launcher.style.right, '24px');
+  assert.equal(launcher.style.bottom, '92px');
+  grok.getBoundingClientRect = () => ({ width: 56, height: 56, top: app.w.innerHeight - 110, bottom: app.w.innerHeight - 54, right: app.w.innerWidth - 32 });
+  app.w.dispatchEvent(new app.w.Event('resize'));
+  await tick();
+  assert.equal(launcher.style.right, '32px');
+  assert.equal(launcher.style.bottom, '122px');
+  grok.remove();
+  await tick();
+  assert.equal(launcher.style.right, '');
+  assert.equal(launcher.style.bottom, '');
+});
+
+
+test('retry from a launcher-opened panel stays visible outside tweet routes', async t => {
+  const app = setup(t);
+  const article = await app.post();
+  control(article).click();
+  app.requests[0].onerror();
+  app.d.querySelector('.xt-close').click();
+  app.w.history.pushState({}, '', '/search');
+  app.w.dispatchEvent(new app.w.PopStateEvent('popstate'));
+  await tick();
+  app.d.querySelector('.xt-launcher').click();
+  [...app.d.querySelectorAll('.xt-panel button')].find(node => node.textContent === '重试').click();
+  await tick();
+  assert.equal(app.d.querySelector('.xt-panel').hidden, false);
+  assert.equal(app.requests.length, 2);
+  assert.notEqual(app.requests[1].aborted, true);
+  app.respond(1);
+  assert.equal(result(app), '你好');
+});
