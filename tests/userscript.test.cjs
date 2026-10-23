@@ -490,7 +490,8 @@ test('runtime version is visible in panel and diagnostics and matches metadata',
   const app = setup(t);
   control(await app.post()).click();
   const version = source.match(/@version\s+(\S+)/)[1];
-  assert.ok(app.d.querySelector('.xt-panel').textContent.includes('推文翻译 ' + version));
+  assert.equal(app.d.querySelector('.xt-panel h2').textContent, '推文翻译');
+  assert.equal(app.d.querySelector('.xt-version').textContent, version);
   assert.ok(app.d.querySelector('.xt-panel').textContent.includes('脚本版本：' + version));
 });
 
@@ -1116,5 +1117,24 @@ test('floating launcher and panel recover after page removes injected UI', async
   launcher.click();
   await tick();
   assert.equal(panel.hidden, false);
+  assert.equal(app.requests.length, 0);
+});
+
+
+test('branding embeds the exact repository logo and preserves accessible controls', t => {
+  const app = setup(t);
+  const expected = 'data:image/png;base64,' + fs.readFileSync('logo.png').toString('base64');
+  const logos = [...app.d.querySelectorAll('.xt-brand-logo')];
+  assert.equal(logos.length, 3);
+  for (const logo of logos) {
+    assert.equal(logo.src, expected);
+    assert.equal(logo.alt, '');
+    assert.equal(logo.hasAttribute('width'), true);
+    assert.equal(logo.hasAttribute('height'), true);
+  }
+  assert.equal(app.d.querySelector('.xt-panel .xt-brand-name span').textContent, 'CoserOps');
+  assert.equal(app.d.querySelector('.xt-settings .xt-brand-name span').textContent, 'CoserOps');
+  assert.equal(app.d.querySelector('.xt-launcher').getAttribute('aria-label'), '打开翻译面板');
+  assert.equal(app.d.querySelectorAll('.xt-card-heading h3').length, 2);
   assert.equal(app.requests.length, 0);
 });

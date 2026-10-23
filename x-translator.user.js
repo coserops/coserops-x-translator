@@ -16,7 +16,7 @@
 // @name:es       CoserOps X(Twitter) Traductor
 // @name:it       CoserOps X(Twitter) Traduttore
 // @namespace    coserops/x-twitter-translator
-// @version      v20261023.2112
+// @version      v20261023.2117
 // @description  在 X 首页时间流的 Grok 按钮左侧添加翻译按钮，使用自己的 API Key 和自选模型，支持官方或自定义兼容接口，在右侧面板显示译文。
 // @description:zh-TW 在 X 首頁時間軸的 Grok 按鈕左側新增翻譯按鈕，使用自己的 API Key 與自選模型，支援官方或自訂相容介面，於右側面板顯示譯文。
 // @description:en Translate X home timeline posts using a button next to Grok. Use your own API key and model with official or custom compatible endpoints, and view translations in a right-side panel.
@@ -59,7 +59,7 @@
   const REQUEST_TIMEOUT_MS = 30000;
   const SCAN_DELAY_MS = 40;
   const ROUTE_POLL_INTERVAL_MS = 500;
-  const SCRIPT_VERSION = 'v20261023.2112';
+  const SCRIPT_VERSION = 'v20261023.2117';
   const providers = {
     deepseek: {
       label: 'DeepSeek',
@@ -744,19 +744,40 @@
     node.addEventListener('click', action);
     return node;
   }
+  // Embed the repository logo so branding needs no external image request.
+  const BRAND_LOGO = 'data:image/png;base64,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';
+  function createBrand() {
+    const brand = createElement('div', undefined, 'xt-brand');
+    const logo = createElement('img', undefined, 'xt-brand-logo');
+    logo.src = BRAND_LOGO;
+    logo.alt = '';
+    logo.width = 36;
+    logo.height = 36;
+    const name = createElement('div', undefined, 'xt-brand-name');
+    name.append(createElement('span', 'CoserOps'), createElement('span', 'X TRANSLATOR', 'xt-brand-caption'));
+    brand.append(logo, name);
+    return brand;
+  }
   const style = createElement('style');
   style.textContent = `
-    .xt-panel,.xt-overlay {
-      --xt-bg:#fff;
-      --xt-surface:#f5f8fa;
-      --xt-ink:#172b3a;
-      --xt-muted:#526572;
-      --xt-line:#d8e2e9;
-      --xt-accent:#086da9;
-      --xt-tint:#eaf6fd;
+    .xt-panel,.xt-overlay,.xt-launcher,.xt-translate {
+      --xt-bg:#fcfdf9;
+      --xt-surface:#f0f3ec;
+      --xt-ink:#0c3345;
+      --xt-muted:#536b70;
+      --xt-line:#d5e0da;
+      --xt-control-line:#81958f;
+      --xt-accent:#315e1d;
+      --xt-brand:#0c3345;
+      --xt-lime:#c7e76b;
+      --xt-on-action:#0c3345;
+      --xt-action:#c7e76b;
+      --xt-action-line:#71963c;
+      --xt-tint:#edf4d9;
       --xt-error:#a52b36;
       --xt-ok:#177354;
-      font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+      text-align:left;
       color:var(--xt-ink);
       color-scheme:light
     }
@@ -773,41 +794,88 @@
       z-index:2147483646;
       background:var(--xt-bg);
       border-left:1px solid var(--xt-line);
-      box-shadow:-12px 0 48px #102a4320;
+      box-shadow:-16px 0 64px #0c334524;
       display:flex;
       flex-direction:column;
-      animation:xt-enter .18s ease-out
+      animation:xt-enter .24s cubic-bezier(.2,.8,.2,1)
     }
     .xt-header {
       flex:none;
       background:var(--xt-bg);
-      padding:20px 22px 16px;
+      padding:24px 26px 22px;
       padding-top:max(20px,env(safe-area-inset-top));
       border-bottom:1px solid var(--xt-line)
     }
     .xt-toolbar {
       display:flex;
       gap:8px;
-      justify-content:flex-end;
-      margin-bottom:12px
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:26px
+    }
+    .xt-brand {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-right:auto;
+      min-width:0
+    }
+    .xt-brand-logo {
+      display:block;
+      width:36px;
+      height:36px;
+      border-radius:11px;
+      flex:none
+    }
+    .xt-brand-name {
+      display:flex;
+      flex-direction:column;
+      font-size:16px;
+      font-weight:750;
+      line-height:1.3;
+      letter-spacing:-.4px
+    }
+    .xt-brand-caption {
+      color:var(--xt-muted);
+      font-size:9px;
+      font-weight:600;
+      letter-spacing:1.5px;
+      margin-top:3px
+    }
+    .xt-toolbar button { padding:6px 10px; font-size:12px }
+    .xt-heading {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap
+    }
+    .xt-version {
+      color:var(--xt-muted);
+      font:10px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;
+      letter-spacing:0
+    }
+    .xt-settings .xt-brand { margin-bottom:20px }
+    .xt-settings fieldset + fieldset {
+      border-top:1px solid var(--xt-line);
+      padding-top:20px
     }
     .xt-panel h2,.xt-settings h2 {
-      font-size:19px;
+      font-size:26px;
       line-height:1.4;
-      letter-spacing:-.4px;
+      letter-spacing:-.7px;
       margin:0;
       font-weight:700
     }
     .xt-subtitle {
       color:var(--xt-muted);
-      font-size:12px;
-      margin:6px 0 0
+      font-size:13px;
+      margin:8px 0 0
     }
     .xt-content {
       overflow:auto;
       overscroll-behavior:contain;
       min-height:0;
-      padding:20px max(22px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(22px,env(safe-area-inset-left));
+      padding:24px max(26px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(26px,env(safe-area-inset-left));
       scrollbar-width:thin
     }
     .xt-panel pre {
@@ -819,21 +887,40 @@
     .xt-card {
       min-width:0;
       border:1px solid var(--xt-line);
-      border-radius:16px;
-      padding:18px;
-      margin:16px 0;
+      border-radius:18px;
+      padding:20px;
+      margin:20px 0;
       background:var(--xt-surface)
     }
     .xt-card h3 {
       margin:0 0 12px;
       color:var(--xt-muted);
       font-size:12px;
-      letter-spacing:1px;
+      letter-spacing:1.5px;
       font-weight:650
     }
     .xt-card-result {
       background:var(--xt-bg);
-      border-top:3px solid var(--xt-accent)
+      border-top:3px solid var(--xt-lime);
+      box-shadow:0 6px 24px #0c334508
+    }
+    .xt-card-heading {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px
+    }
+    .xt-card-heading h3 { margin:0 }
+    .xt-card-index {
+      color:var(--xt-muted);
+      font:10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+      letter-spacing:1px
+    }
+    .xt-card-result .xt-card-heading h3 { color:var(--xt-accent) }
+    .xt-source:empty::before {
+      content:"在时间流中发现，点一下读懂。";
+      color:var(--xt-muted)
     }
     .xt-source {
       color:var(--xt-muted);
@@ -854,10 +941,10 @@
       min-height:44px;
       padding:8px 14px;
       border:1px solid var(--xt-line);
-      border-radius:999px;
+      border-radius:12px;
       background:var(--xt-bg);
       color:var(--xt-ink);
-      transition:background .15s,border-color .15s,transform .15s
+      transition:background .16s,border-color .16s,box-shadow .16s,transform .16s
     }
     .xt-panel button:hover:not(:disabled),.xt-settings button:hover:not(:disabled) {
       background:var(--xt-tint);
@@ -867,9 +954,9 @@
       transform:translateY(1px)
     }
     .xt-panel .xt-primary,.xt-settings .xt-primary {
-      background:var(--xt-accent);
-      border-color:var(--xt-accent);
-      color:var(--xt-bg);
+      background:var(--xt-action);
+      border-color:var(--xt-action-line);
+      color:var(--xt-on-action);
       font-weight:650
     }
     .xt-panel button:disabled,.xt-settings button:disabled {
@@ -878,13 +965,13 @@
       transform:none
     }
     .xt-panel :focus-visible,.xt-overlay :focus-visible,.xt-translate:focus-visible,.xt-launcher:focus-visible {
-      outline:3px solid var(--xt-accent,#086da9);
+      outline:3px solid var(--xt-accent,#315e1d);
       outline-offset:3px
     }
     .xt-panel .xt-primary:hover:not(:disabled),.xt-settings .xt-primary:hover:not(:disabled) {
-      background:var(--xt-accent);
-      color:var(--xt-bg);
-      box-shadow:inset 0 0 0 2px var(--xt-bg)
+      background:var(--xt-action);
+      color:var(--xt-on-action);
+      box-shadow:inset 0 0 0 2px var(--xt-on-action)
     }
     .xt-status {
       border:1px solid transparent;
@@ -939,7 +1026,8 @@
       inset:0;
       height:100vh;
       height:100dvh;
-      background:#071a2b80;
+      background:#061d29a3;
+      backdrop-filter:blur(6px);
       z-index:2147483647;
       display:grid;
       place-items:center;
@@ -955,25 +1043,25 @@
       flex-direction:column;
       background:var(--xt-bg);
       border:1px solid var(--xt-line);
-      border-radius:20px;
-      box-shadow:0 24px 80px #0005;
+      border-radius:24px;
+      box-shadow:0 32px 96px #061d2959;
       overflow:hidden;
-      animation:xt-enter .18s ease-out
+      animation:xt-enter .24s cubic-bezier(.2,.8,.2,1)
     }
     .xt-settings .xt-header {
-      padding:20px 24px 16px
+      padding:24px 28px 20px
     }
     .xt-form-body {
       overflow:auto;
       overscroll-behavior:contain;
-      padding:4px 24px 20px;
+      padding:4px 28px 24px;
       min-height:0;
       scrollbar-width:thin
     }
     .xt-settings fieldset {
       border:0;
       padding:0;
-      margin:20px 0 0;
+      margin:24px 0 0;
       min-width:0
     }
     .xt-settings legend {
@@ -1001,8 +1089,13 @@
       font-size:14px;
       color:var(--xt-ink);
       background:var(--xt-bg);
-      border:1px solid var(--xt-line);
-      border-radius:10px
+      border:1px solid var(--xt-control-line);
+      border-radius:12px;
+      transition:border-color .16s,box-shadow .16s
+    }
+    .xt-settings input[readonly] {
+      background:var(--xt-surface);
+      color:var(--xt-muted)
     }
     .xt-settings input:hover,.xt-settings select:hover {
       border-color:var(--xt-muted)
@@ -1093,7 +1186,7 @@
       display:flex;
       justify-content:flex-end;
       gap:10px;
-      padding:16px 24px;
+      padding:16px 28px;
       border-top:1px solid var(--xt-line);
       background:var(--xt-bg);
       flex:none
@@ -1108,16 +1201,17 @@
       border:0;
       border-radius:50%;
       background:transparent;
-      color:#1d9bf0;
+      color:var(--xt-ink);
       cursor:pointer;
       font:650 15px system-ui;
-      transition:background .15s
+      transition:background .16s,transform .16s
     }
     .xt-translate:hover {
-      background:#1d9bf022
+      background:var(--xt-tint)
     }
     .xt-translate:active {
-      background:#1d9bf040
+      background:var(--xt-lime);
+      color:var(--xt-brand)
     }
     .xt-launcher {
       display:flex;
@@ -1130,20 +1224,26 @@
       right:max(24px,env(safe-area-inset-right));
       bottom:max(96px,env(safe-area-inset-bottom));
       z-index:2147483645;
-      min-width:64px;
+      gap:10px;
+      min-width:88px;
       height:48px;
-      padding:0 16px;
-      border:1px solid #ffffff66;
+      padding:0 16px 0 8px;
+      border:1px solid #c7e76b66;
       border-radius:999px;
-      background:#086da9;
-      color:#fff;
-      box-shadow:0 4px 16px #0003;
+      background:var(--xt-brand);
+      color:var(--xt-lime);
+      box-shadow:0 6px 24px #0c33452e;
+      transition:transform .18s,box-shadow .18s;
       cursor:pointer;
       font:650 15px system-ui
     }
+    .xt-launcher .xt-brand-logo { width:30px; height:30px; border-radius:9px }
     .xt-launcher:hover {
-      background:#075b8d
+      background:var(--xt-brand);
+      transform:translateY(-2px);
+      box-shadow:0 10px 28px #0c334540
     }
+    .xt-launcher:active { transform:translateY(0) scale(.97) }
     .xt-panel [hidden],.xt-overlay [hidden],.xt-panel[hidden],.xt-overlay[hidden] {
       display:none!important
     }
@@ -1163,14 +1263,16 @@
       }
     }
     @media(prefers-color-scheme:dark){
-      .xt-panel,.xt-overlay{
-        --xt-bg:#111b24;
-        --xt-surface:#182630;
-        --xt-ink:#edf3f7;
-        --xt-muted:#a5b6c4;
-        --xt-line:#354754;
-        --xt-accent:#78cefa;
-        --xt-tint:#163347;
+      .xt-panel,.xt-overlay,.xt-launcher,.xt-translate{
+        --xt-bg:#0b2633;
+        --xt-surface:#103342;
+        --xt-ink:#edf4e6;
+        --xt-muted:#adc1c3;
+        --xt-line:#3b5660;
+        --xt-control-line:#69828b;
+        --xt-accent:#c7e76b;
+        --xt-action-line:#c7e76b;
+        --xt-tint:#263e31;
         --xt-error:#ffadb1;
         --xt-ok:#83dbb7;
         color-scheme:dark
@@ -1178,12 +1280,12 @@
     }
     @media(max-width:380px){
       .xt-header,.xt-content{
-        padding-left:16px;
-        padding-right:16px
+        padding-left:max(16px,env(safe-area-inset-left));
+        padding-right:max(16px,env(safe-area-inset-right))
       }
       .xt-settings .xt-header,.xt-form-body,.xt-actions{
-        padding-left:16px;
-        padding-right:16px
+        padding-left:max(16px,env(safe-area-inset-left));
+        padding-right:max(16px,env(safe-area-inset-right))
       }
       .xt-card{
         padding:14px
@@ -1191,6 +1293,23 @@
       .xt-settings{
         border-radius:16px
       }
+    }
+    @media(max-height:560px){
+      .xt-header,.xt-settings .xt-header {
+        padding-top:max(12px,env(safe-area-inset-top));
+        padding-bottom:12px
+      }
+      .xt-toolbar { margin-bottom:12px }
+      .xt-panel h2,.xt-settings h2 { font-size:22px }
+      .xt-settings .xt-header {
+        display:flex;
+        flex-wrap:wrap;
+        align-items:center;
+        column-gap:16px
+      }
+      .xt-settings .xt-brand { margin-bottom:0 }
+      .xt-settings .xt-subtitle { flex-basis:100%; margin:8px 0 0 }
+      .xt-actions { padding-top:10px; padding-bottom:10px }
     }
     @media(pointer:coarse){
       .xt-settings input,.xt-settings select{
@@ -1208,8 +1327,9 @@
       .xt-panel,.xt-settings,.xt-status::before{
         animation:none!important
       }
-      .xt-panel button,.xt-settings button,.xt-translate{
-        transition:none
+      .xt-panel *,.xt-overlay *,.xt-launcher,.xt-translate{
+        transition:none!important;
+        scroll-behavior:auto!important
       }
     }
     @media(forced-colors:active){
@@ -1246,6 +1366,7 @@
     if (!status.textContent) setStatus('点击推文旁的「译」开始翻译，或打开「设置」配置服务。');
     if (overlay.hidden) closeButton.focus({ preventScroll: true });
   }, 'xt-launcher');
+  launcher.prepend(createBrand().firstElementChild);
   launcher.setAttribute('aria-label', '打开翻译面板');
   launcher.setAttribute('aria-controls', panel.id);
   launcher.title = '打开翻译面板';
@@ -1263,13 +1384,19 @@
   retryButton.hidden = true;
   const panelHeader = createElement('header', undefined, 'xt-header');
   const toolbar = createElement('div', undefined, 'xt-toolbar');
-  toolbar.append(closeButton, createButton('设置', showSettings));
-  panelHeader.append(toolbar, createElement('h2', `推文翻译 ${SCRIPT_VERSION}`), createElement('p', '按需翻译 · 使用你的模型', 'xt-subtitle'));
+  toolbar.append(createBrand(), closeButton, createButton('设置', showSettings));
+  const panelHeading = createElement('div', undefined, 'xt-heading');
+  panelHeading.append(createElement('h2', '推文翻译'), createElement('span', SCRIPT_VERSION, 'xt-version'));
+  panelHeader.append(toolbar, panelHeading, createElement('p', '跨越语言，不离开时间流。', 'xt-subtitle'));
   const panelContent = createElement('div', undefined, 'xt-content');
 
   function createCard(title, content, className = '') {
     const section = createElement('section', undefined, 'xt-card ' + className);
-    section.append(createElement('h3', title), content);
+    const heading = createElement('div', undefined, 'xt-card-heading');
+    const index = createElement('span', className === 'xt-card-result' ? '02 / TRANSLATION' : '01 / ORIGINAL', 'xt-card-index');
+    index.setAttribute('aria-hidden', 'true');
+    heading.append(createElement('h3', title), index);
+    section.append(heading, content);
     return section;
   }
   retryButton.className = 'xt-primary';
@@ -1310,7 +1437,7 @@
   form.setAttribute('aria-modal', 'true');
   form.setAttribute('aria-label', '翻译设置');
   const formHeader = createElement('header', undefined, 'xt-header');
-  formHeader.append(createElement('h2', '翻译设置'), createElement('p', '先确认服务地址，再填写密钥。切换供应商前请保存。', 'xt-subtitle'));
+  formHeader.append(createBrand(), createElement('h2', '翻译设置'), createElement('p', '先确认服务地址，再填写密钥。切换供应商前请保存。', 'xt-subtitle'));
   const formBody = createElement('div', undefined, 'xt-form-body');
   form.append(formHeader, formBody);
   let fieldGroup;
