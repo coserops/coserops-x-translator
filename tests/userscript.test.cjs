@@ -1088,3 +1088,33 @@ test('retry from a launcher-opened panel stays visible outside tweet routes', as
   app.respond(1);
   assert.equal(result(app), '你好');
 });
+
+
+test('userscript update version matches the displayed version', () => {
+  const metadataVersion = source.match(/@version\s+(\S+)/)[1];
+  const displayedVersion = source.match(/const SCRIPT_VERSION = '([^']+)'/)[1];
+  assert.equal(metadataVersion, displayedVersion);
+});
+
+test('floating launcher and panel recover after page removes injected UI', async t => {
+  const app = setup(t);
+  const launcher = app.d.querySelector('.xt-launcher');
+  const panel = app.d.querySelector('.xt-panel');
+  const overlay = app.d.querySelector('.xt-overlay');
+  const style = [...app.d.querySelectorAll('style')].find(node => node.textContent.includes('.xt-launcher'));
+  launcher.remove();
+  panel.remove();
+  overlay.remove();
+  style.remove();
+  await tick();
+  assert.equal(launcher.isConnected, true);
+  assert.equal(panel.isConnected, true);
+  assert.equal(overlay.isConnected, true);
+  assert.equal(style.isConnected, true);
+  assert.equal(app.d.querySelectorAll('.xt-launcher').length, 1);
+  assert.equal(launcher.textContent, '译');
+  launcher.click();
+  await tick();
+  assert.equal(panel.hidden, false);
+  assert.equal(app.requests.length, 0);
+});

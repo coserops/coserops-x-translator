@@ -16,7 +16,7 @@
 // @name:es       CoserOps X(Twitter) Traductor
 // @name:it       CoserOps X(Twitter) Traduttore
 // @namespace    coserops/x-twitter-translator
-// @version      v20261023
+// @version      v20261023.2112
 // @description  在 X 首页时间流的 Grok 按钮左侧添加翻译按钮，使用自己的 API Key 和自选模型，支持官方或自定义兼容接口，在右侧面板显示译文。
 // @description:zh-TW 在 X 首頁時間軸的 Grok 按鈕左側新增翻譯按鈕，使用自己的 API Key 與自選模型，支援官方或自訂相容介面，於右側面板顯示譯文。
 // @description:en Translate X home timeline posts using a button next to Grok. Use your own API key and model with official or custom compatible endpoints, and view translations in a right-side panel.
@@ -59,7 +59,7 @@
   const REQUEST_TIMEOUT_MS = 30000;
   const SCAN_DELAY_MS = 40;
   const ROUTE_POLL_INTERVAL_MS = 500;
-  const SCRIPT_VERSION = 'v20261023.5';
+  const SCRIPT_VERSION = 'v20261023.2112';
   const providers = {
     deepseek: {
       label: 'DeepSeek',
@@ -1120,7 +1120,13 @@
       background:#1d9bf040
     }
     .xt-launcher {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-sizing:border-box;
       position:fixed;
+      right:24px;
+      bottom:96px;
       right:max(24px,env(safe-area-inset-right));
       bottom:max(96px,env(safe-area-inset-bottom));
       z-index:2147483645;
@@ -2181,6 +2187,10 @@
    */
   function scanArticles() {
     scanScheduled = false;
+    if (!style.isConnected) document.head.append(style);
+    for (const node of [panel, overlay, launcher]) {
+      if (!node.isConnected) document.body.append(node);
+    }
     positionLauncher();
     const supported = isTranslationPage();
     removeObsoleteControls(supported);
