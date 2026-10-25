@@ -16,6 +16,7 @@
 // @name:es       CoserOps X(Twitter) Traductor
 // @name:it       CoserOps X(Twitter) Traduttore
 // @namespace    coserops/x-twitter-translator
+// @author       CoserOps
 // @version      v20261025.1351
 // @description  在 X 首页时间流的 Grok 按钮左侧添加翻译按钮，使用自己的 API Key 和自选模型，支持官方或自定义兼容接口，在右侧面板显示译文。
 // @description:zh-TW 在 X 首頁時間軸的 Grok 按鈕左側新增翻譯按鈕，使用自己的 API Key 與自選模型，支援官方或自訂相容介面，於右側面板顯示譯文。
