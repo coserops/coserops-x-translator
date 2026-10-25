@@ -108,7 +108,7 @@ test('Qwen domestic/international direct calls use separate keys, model and lang
 });
 
 test('routes and selected tabs prevent injection outside supported pages', async t => {
-  const app = setup(t, { path: '/search' }); const a = await app.post(); assert.equal(control(a), null);
+  const app = setup(t, { path: '/explore' }); const a = await app.post(); assert.equal(control(a), null);
   app.w.history.pushState({}, '', '/home'); app.w.dispatchEvent(new app.w.PopStateEvent('popstate')); await tick(); assert.ok(control(a));
   app.d.querySelector('main').insertAdjacentHTML('afterbegin', '<div role="tablist"><a role="tab" aria-selected="true">Following</a></div>'); await tick(); assert.ok(control(a));
   const tab = app.d.querySelector('[role=tab]'); tab.textContent = 'Custom list'; await tick(); assert.equal(control(a), null);
@@ -644,7 +644,7 @@ test('status pages translate the main post and dynamically loaded replies next t
   await tick(); assert.equal(main.querySelectorAll('.xt-translate').length, 1);
   app.w.history.pushState({}, '', '/i/web/status/123');
   app.w.dispatchEvent(new app.w.PopStateEvent('popstate')); await tick(); assert.ok(control(main));
-  app.w.history.pushState({}, '', '/search');
+  app.w.history.pushState({}, '', '/explore');
   app.w.dispatchEvent(new app.w.PopStateEvent('popstate')); await tick();
   assert.equal(app.d.querySelectorAll('.xt-translate').length, 0);
 });
@@ -995,7 +995,7 @@ test('profile feeds inject beside own Grok across tabs and SPA navigation', asyn
   late.querySelector('header').insertAdjacentHTML('beforeend', '<button title="Grok">G</button>');
   await tick();
   assert.equal(control(late).nextElementSibling.title, 'Grok');
-  for (const path of ['/search', '/explore', '/notifications', '/messages', '/settings', '/i', '/grok', '/airejectlist/followers', '/airejectlist/unknown']) {
+  for (const path of ['/search/unknown', '/explore', '/notifications', '/messages', '/settings', '/i', '/grok', '/airejectlist/followers', '/airejectlist/unknown']) {
     app.w.history.pushState({}, '', path);
     app.w.dispatchEvent(new app.w.PopStateEvent('popstate'));
     await tick();
@@ -1077,7 +1077,7 @@ test('retry from a launcher-opened panel stays visible outside tweet routes', as
   control(article).click();
   app.requests[0].onerror();
   app.d.querySelector('.xt-close').click();
-  app.w.history.pushState({}, '', '/search');
+  app.w.history.pushState({}, '', '/explore');
   app.w.dispatchEvent(new app.w.PopStateEvent('popstate'));
   await tick();
   app.d.querySelector('.xt-launcher').click();
@@ -1185,4 +1185,39 @@ test('contact orbit is continuous with static accessible fallbacks', t => {
   }
   assert.equal(app.w.getComputedStyle(app.d.querySelector('.xt-contact')).fontSize, '14px');
   assert.equal(app.w.getComputedStyle(app.d.querySelector('.xt-contact a')).fontSize, '15px');
+});
+
+
+test('search results translate posts and replies across filters and SPA navigation', async t => {
+  const app = setup(t, { path: '/search?q=eu.org&src=typed_query' });
+  app.d.querySelector('main').insertAdjacentHTML('afterbegin', '<div role="tablist"><a role="tab" aria-selected="true">Top</a></div>');
+  const post = await app.post('Search post');
+  const reply = await app.post('Search reply');
+  for (const article of [post, reply]) {
+    assert.equal(control(article).textContent, '译');
+    assert.equal(control(article).nextElementSibling.getAttribute('aria-label'), 'Ask Grok');
+    control(article).click();
+    assert.equal(JSON.parse(app.requests.at(-1).data).messages[1].content, article.querySelector('[data-testid=tweetText]').textContent);
+    app.respond(app.requests.length - 1);
+  }
+  const late = await app.post('Late search reply', false);
+  assert.equal(control(late), null);
+  late.querySelector('header').insertAdjacentHTML('beforeend', '<button title="Grok">G</button>');
+  await tick();
+  assert.ok(control(late));
+  post.insertAdjacentHTML('beforeend', '<div role="link"><article data-testid="tweet"><button title="Grok">G</button><div data-testid="tweetText">Quoted</div></article></div>');
+  for (const path of ['/search?q=eu.org&f=live', '/search/?q=eu.org&f=media', '/user/status/123', '/search?q=replies']) {
+    app.d.querySelector('[role=tab]').textContent = 'Latest';
+    app.w.history.pushState({}, '', path);
+    app.w.dispatchEvent(new app.w.PopStateEvent('popstate'));
+    await tick();
+    for (const article of [post, reply, late]) assert.equal(article.querySelectorAll('.xt-translate').length, 1, path);
+  }
+  app.w.history.pushState({}, '', '/notifications');
+  app.w.dispatchEvent(new app.w.PopStateEvent('popstate'));
+  await tick();
+  assert.equal(app.d.querySelectorAll('.xt-translate').length, 0);
+  app.w.history.pushState({}, '', '/search?q=eu.org');
+  await new Promise(resolve => setTimeout(resolve, 650));
+  assert.equal(app.d.querySelectorAll('.xt-translate').length, 3);
 });
